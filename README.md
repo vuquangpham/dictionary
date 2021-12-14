@@ -1,2 +1,2 @@
 # dictionary
-# this app just built for my final project of DASA @@
+this app just built for my final project of DASA @@

@@ -286,4 +286,5 @@ body {
   opacity: 0; }
 
 .btn-dictionary {
+  display: none;
   margin-top: 5rem; }

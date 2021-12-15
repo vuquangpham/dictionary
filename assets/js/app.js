@@ -7,13 +7,17 @@ let leftLanguageActive = $(".dictionary__from--active");
 let rightLanguageActive = $(".dictionary__to--active");
 const translateDictionary = $(".dictionary__from");
 const translatedDictionary = $(".dictionary__to");
+const translateElm = $(".dictionary__translate");
+const translatedElm = $(".dictionary__translated");
 
 class Dictionary {
   #translateFromLanguage;
   #translateToLanguage;
-  constructor(translateFromElm, translateToElm) {
-    this.translateFromElm = translateFromElm;
-    this.translateToElm = translateToElm;
+  #initData;
+  #typingTimeout;
+  constructor(translateElm, translatedElm) {
+    this.translateElm = translateElm;
+    this.translatedElm = translatedElm;
     this.initApp();
   }
 
@@ -26,6 +30,39 @@ class Dictionary {
 
     this.#translateFromLanguage = "eng";
     this.#translateToLanguage = "vie";
+
+    this.#initData = [
+      {
+        vocal: "hello",
+        meaning: "Xin chào",
+        type: "noun",
+        example: "<strong>Hello</strong>, I'm Vu",
+      },
+      {
+        vocal: "hi",
+        meaning: "Xin chào",
+        type: "noun",
+        example: "<strong>Hi</strong>, I'm Vu",
+      },
+      {
+        vocal: "year",
+        meaning: "năm",
+        type: "noun",
+        example: "Happy new <strong>year</strong>",
+      },
+      {
+        vocal: "age",
+        meaning: "tuổi",
+        type: "noun",
+        example: "What is your <strong>age?</strong>",
+      },
+    ];
+  }
+
+  clearData() {
+    this.translateElm.innerText = "";
+    this.translatedElm.firstElementChild.innerText = "";
+    $(".dictionary__explaination").innerHTML = "";
   }
 
   switchCurrentLanguage() {
@@ -77,6 +114,7 @@ class Dictionary {
       this.switchLine("right");
       this.switchLine("left");
       this.switchCurrentLanguage();
+      this.translate($(".dictionary__translate").innerText.trim());
 
       return;
     }
@@ -87,6 +125,7 @@ class Dictionary {
       this.switchLine("left");
       this.switchLine("right");
       this.switchCurrentLanguage();
+      this.translate($(".dictionary__translate").innerText.trim());
 
       return;
     }
@@ -94,6 +133,7 @@ class Dictionary {
     this.switchLine("left");
     this.switchLine("right");
     this.switchCurrentLanguage();
+    this.translate($(".dictionary__translate").innerText.trim());
   }
 
   showModal(e) {
@@ -112,6 +152,60 @@ class Dictionary {
     return;
   }
 
+  translate(data) {
+    if (!data) return;
+
+    const findingData = this.#initData.find((x) => x.vocal === data);
+    console.log(data, findingData);
+    if (findingData) {
+      const html = `
+      <p class="">Loại từ: <span>${findingData.type}</span></p>
+      <p>Ví dụ cho <span>${findingData.vocal}</span></p>
+      <blockquote>
+        ${findingData.example}
+      </blockquote>
+    </div>`;
+      console.log(html);
+      $(".dictionary__explaination").innerHTML = html;
+      $(".translated").innerText = findingData.meaning;
+      return;
+    }
+
+    /* Khong tim ra trong init data */
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${
+      this.#translateFromLanguage === "eng" ? "en" : "vi"
+    }&tl=${
+      this.#translateToLanguage === "eng" ? "en" : "vi"
+    }&dt=t&q=${encodeURI(data)}`;
+    console.log(url);
+
+    // fetch(url)
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     const [x] = data;
+    //     console.log(x[0]);
+    //     $(".translated").innerText = x[0][0];
+    //   })
+    //   .catch((error) => {
+    //     console.log("Loi API roi");
+    //   });
+  }
+
+  handleInputChange() {
+    if (!this.translateElm.innerText.trim()) this.clearData();
+
+    if (this.#typingTimeout) {
+      clearTimeout(this.#typingTimeout);
+    }
+
+    $(".dictionary__explaination").innerHTML = "";
+
+    const data = $(".dictionary__translate").innerText.trim().toLowerCase();
+    this.#typingTimeout = setTimeout(() => {
+      this.translate(data);
+    }, 500);
+  }
+
   preventPasteImage(e) {
     e.preventDefault();
     let text = e.clipboardData.getData("text/plain");
@@ -119,7 +213,7 @@ class Dictionary {
   }
 }
 
-const app = new Dictionary();
+const app = new Dictionary(translateElm, translatedElm);
 
 // Prevent paste Image
 $("[contenteditable]").addEventListener("paste", app.preventPasteImage);
@@ -130,6 +224,7 @@ $(".modal").addEventListener("click", app.closeModal);
 // Show modal by clicking btn
 $(".btn-dictionary").addEventListener("click", app.showModal);
 
+// Switch Langugage
 translateDictionary.addEventListener("click", function (e) {
   app.switchLanguage(e, "left");
 });
@@ -139,3 +234,8 @@ translatedDictionary.addEventListener("click", function (e) {
 });
 
 $(".dictionary__icon").addEventListener("click", app.switchLanguage.bind(app));
+
+$(".dictionary__translate").addEventListener(
+  "input",
+  app.handleInputChange.bind(app)
+);

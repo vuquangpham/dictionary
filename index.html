@@ -21,8 +21,8 @@
     <div class="dictionary">
       <div class="dictionary__toolbox">
         <div class="dictionary__from">
-          <p class="dictionary__language dictionary__from--active">VIE</p>
-          <p class="dictionary__language">ENG</p>
+          <p data-language="eng" class="dictionary__language dictionary__from--active">ENG</p>
+          <p data-language="vie" class="dictionary__language">VIE</p>
           <div class="line line--from"></div>
         </div>
         <svg
@@ -40,8 +40,8 @@
           />
         </svg>
         <div class="dictionary__to">
-          <p class="dictionary__language dictionary__to--active">ENG</p>
-          <p class="dictionary__language">VIE</p>
+          <p data-language="vie" class="dictionary__language dictionary__to--active">VIE</p>
+          <p data-language="eng" class="dictionary__language">ENG</p>
           <div class="line line--to"></div>
         </div>
       </div>
@@ -97,6 +97,7 @@
         </blockquote>
       </div>
     </div>
+    
     <div class="modal hidden">
       <form action="#" class="modal__form">
         <div class="modal__close">

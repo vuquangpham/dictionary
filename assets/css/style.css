@@ -25,7 +25,8 @@ body {
   min-height: 100vh;
   padding: 7rem 0;
   font-family: "Roboto Slab", serif;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  background-color: #f8f9fa; }
 
 .dictionary {
   max-width: 980px;
@@ -69,6 +70,8 @@ body {
     transition: all 0.2s; }
     .dictionary__icon:hover {
       background-color: var(--color-grey-dark); }
+    .dictionary__icon path {
+      pointer-events: none; }
   .dictionary__translate {
     padding: 1rem 2.5rem;
     border: none;
@@ -178,7 +181,7 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  transition: all 0.3s; }
+  transition: all 0.5s; }
   .modal__form {
     position: relative;
     background-color: #fff;
@@ -237,7 +240,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   z-index: 1;
-  transition: background-color 0.3s; }
+  transition: all 0.24s ease-out; }
 
 .form__group {
   position: relative; }

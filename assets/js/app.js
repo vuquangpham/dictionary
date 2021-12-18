@@ -10,6 +10,7 @@ const translatedDictionary = $(".dictionary__to");
 const translateElm = $(".dictionary__translate");
 const translatedElm = $(".dictionary__translated");
 const btnAddTo = $(".btn.btn-dictionary");
+const btnClearData = $(".clear-data");
 const formAddTo = $(".modal__form");
 
 class Dictionary {
@@ -66,6 +67,7 @@ class Dictionary {
     this.translatedElm.firstElementChild.innerText = "";
     $(".dictionary__explaination").innerHTML = "";
     btnAddTo.classList.add("btn-hidden");
+    btnClearData.classList.add("hidden");
   }
 
   switchCurrentLanguage() {
@@ -163,14 +165,21 @@ class Dictionary {
         ${findingData.example}
       </blockquote>
     </div>`;
-      console.log(html);
       $(".dictionary__explaination").innerHTML = html;
       $(".translated").innerText = findingData.meaning;
       return;
     }
-
-    btnAddTo.classList.remove("btn-hidden");
     /* Khong tim ra trong init data */
+
+    /* Khong su dung API */
+    if (!$("#switch-api").checked) {
+      btnAddTo.classList.remove("btn-hidden");
+      this.translatedElm.firstElementChild.innerText = "";
+      return;
+    }
+
+    /* Dung google API */
+    btnAddTo.classList.add("btn-hidden");
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${
       this.#translateFromLanguage === "eng" ? "en" : "vi"
     }&tl=${
@@ -185,7 +194,6 @@ class Dictionary {
         const translatedWord = x
           .map((elm) => elm[0])
           .map((elm) => elm.replace(elm[0], elm[0].toUpperCase()));
-        console.log(translatedWord);
         $(".translated").innerText = translatedWord.join("");
       })
       .catch((error) => {
@@ -195,7 +203,7 @@ class Dictionary {
 
   handleInputChange() {
     if (!this.translateElm.innerText.trim()) this.clearData();
-
+    btnClearData.classList.remove("hidden");
     if (this.#typingTimeout) {
       clearTimeout(this.#typingTimeout);
     }
@@ -212,6 +220,7 @@ class Dictionary {
     this.#initData.push(data);
     formAddTo.reset();
     $(".modal__example").innerText = "";
+    btnAddTo.classList.add("btn-hidden");
     this.closeModal();
     this.translate($(".dictionary__translate").innerText.trim());
   }
@@ -276,4 +285,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     app.addAWord(data);
   });
+
+  $("#switch-api").addEventListener("change", (e) => {
+    app.translate($(".dictionary__translate").innerText.trim());
+  });
+  btnClearData.addEventListener("click", app.clearData.bind(app));
 });

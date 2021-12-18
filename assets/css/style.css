@@ -20,6 +20,9 @@
 
 html {
   font-size: 62.5%; }
+  @media screen and (max-width: 37.5em) {
+    html {
+      font-size: 50%; } }
 
 body {
   min-height: 100vh;
@@ -40,6 +43,9 @@ body {
   background-color: #fff;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.13);
   overflow: hidden; }
+  @media screen and (max-width: 21.87em) {
+    .dictionary {
+      grid-template-columns: 1fr; } }
   .dictionary__toolbox {
     grid-column: 1/-1;
     display: flex;
@@ -48,6 +54,10 @@ body {
     border: 1px solid var(--color-grey-light);
     border-collapse: collapse;
     border-bottom: none; }
+    @media screen and (max-width: 21.87em) {
+      .dictionary__toolbox {
+        flex-direction: column;
+        gap: 1em; } }
   .dictionary__from, .dictionary__to {
     position: relative;
     flex: 1; }
@@ -77,10 +87,16 @@ body {
     border: none;
     border: 1px solid var(--color-grey-light);
     word-break: break-all; }
+    @media screen and (max-width: 21.87em) {
+      .dictionary__translate {
+        min-height: 15rem; } }
     .dictionary__translate:focus {
       outline: none; }
   .dictionary__translated {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-height: 15rem;
     background-color: var(--color-grey-light-2); }
     .dictionary__translated p {
@@ -123,7 +139,6 @@ body {
   grid-column: 1 / span 1;
   width: 100%;
   padding: 1rem 2rem;
-  margin: 0 auto;
   border: 1px solid var(--color-primary);
   background-color: transparent;
   border-radius: 20px;
@@ -142,12 +157,10 @@ body {
     transform: translateY(0.1rem); }
 
 .toolbox {
-  position: absolute;
   display: flex;
   align-items: center;
   gap: 1rem;
-  bottom: 1rem;
-  left: 2rem; }
+  margin-left: 2rem; }
   .toolbox__icon {
     width: 4rem;
     height: 4rem;
@@ -181,7 +194,7 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 2;
-  transition: all 0.5s; }
+  transition: opacity 0.24s; }
   .modal__form {
     position: relative;
     background-color: #fff;
@@ -240,7 +253,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   z-index: 1;
-  transition: all 0.24s ease-out; }
+  transition: opacity 0.24s, background-color 0.24s; }
 
 .form__group {
   position: relative; }
@@ -286,5 +299,8 @@ body {
   opacity: 0; }
 
 .btn-dictionary {
+  margin-top: 4rem; }
+
+.btn-hidden {
   display: none;
-  margin-top: 5rem; }
+  opacity: 0; }

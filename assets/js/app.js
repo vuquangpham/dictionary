@@ -34,32 +34,62 @@ class Dictionary {
     this.#translateFromLanguage = "eng";
     this.#translateToLanguage = "vie";
 
-    this.#initData = [
-      {
-        vocal: "hello",
-        meaning: "Xin chào",
-        type: "noun",
-        example: "<strong>Hello</strong>, I'm Vu",
-      },
-      {
-        vocal: "hi",
-        meaning: "Xin chào",
-        type: "noun",
-        example: "<strong>Hi</strong>, I'm Vu",
-      },
-      {
-        vocal: "year",
-        meaning: "năm",
-        type: "noun",
-        example: "Happy new <strong>year</strong>",
-      },
-      {
-        vocal: "age",
-        meaning: "tuổi",
-        type: "noun",
-        example: "What is your <strong>age?</strong>",
-      },
-    ];
+    // this.#initData = [
+    //   {
+    //     vocal: "hello",
+    //     meaning: "Xin chào",
+    //     type: "noun",
+    //     example: "<strong>Hello</strong>, I'm Vu",
+    //   },
+    //   {
+    //     vocal: "hi",
+    //     meaning: "Xin chào",
+    //     type: "noun",
+    //     example: "<strong>Hi</strong>, I'm Vu",
+    //   },
+    //   {
+    //     vocal: "year",
+    //     meaning: "năm",
+    //     type: "noun",
+    //     example: "Happy new <strong>year</strong>",
+    //   },
+    //   {
+    //     vocal: "age",
+    //     meaning: "tuổi",
+    //     type: "noun",
+    //     example: "What is your <strong>age?</strong>",
+    //   },
+    // ];
+    this.#initData = new Map([
+      [
+        "hello",
+        {
+          vocal: "hello",
+          meaning: "Xin chào",
+          type: "noun",
+          example: "<strong>Hello</strong>, I'm Vu",
+        },
+      ],
+      [
+        "hi",
+        {
+          vocal: "hi",
+          meaning: "Xin chào",
+          type: "noun",
+          example: "<strong>Hi</strong>, I'm Vu",
+        },
+      ],
+      [
+        "year",
+        {
+          vocal: "year",
+          meaning: "năm",
+          type: "noun",
+          example: "Happy new <strong>year</strong>",
+        },
+      ],
+    ]);
+    console.log(this.#initData.get("hello"));
   }
 
   clearData() {
@@ -154,10 +184,8 @@ class Dictionary {
 
   translate(data) {
     if (!data) return;
-
-    const findingData = this.#initData.find((x) => x.vocal === data);
-    console.log(data, findingData);
-    if (findingData) {
+    if (this.#initData.get(data)) {
+      const findingData = this.#initData.get(data);
       const html = `
       <p class="">Loại từ: <span>${findingData.type}</span></p>
       <p>Ví dụ cho <span>${findingData.vocal}</span></p>
@@ -169,6 +197,7 @@ class Dictionary {
       $(".translated").innerText = findingData.meaning;
       return;
     }
+
     /* Khong tim ra trong init data */
 
     /* Khong su dung API */
@@ -217,12 +246,13 @@ class Dictionary {
   }
 
   addAWord(data) {
-    this.#initData.push(data);
+    // this.#initData.push(data);
+    this.#initData.set(data.vocal, data);
     formAddTo.reset();
     $(".modal__example").innerText = "";
     btnAddTo.classList.add("btn-hidden");
     this.closeModal();
-    this.translate($(".dictionary__translate").innerText.trim());
+    this.translate($(".dictionary__translate").innerText.trim().toLowerCase());
   }
 
   preventPasteImage(e) {
@@ -234,7 +264,6 @@ class Dictionary {
 
 document.addEventListener("DOMContentLoaded", () => {
   const app = new Dictionary(translateElm, translatedElm);
-
   // Prevent paste Image
   $("[contenteditable]").addEventListener("paste", app.preventPasteImage);
 
